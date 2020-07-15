@@ -1,0 +1,18 @@
+{
+    "Title": "TwitterProduction",
+    "Nsq": "127.0.0.1",
+    "NsqPort": "4161",
+    "Topic": "img",
+    "Chanel": "gochanel",
+    "TwiterCustomerKey":"Q5sI9yDZO6BJYhp40vEAK15N9",
+    "TwiterCustomerSecretKey":"lr8dtAIZvafN2yR8rdOdiBbMOvAKwJi2HC5mJ7xNymmDgcQCcv",
+    "TwiterCuAccessKey":"1281096787592273920-Bzsmz9QpHdqPM7Fprm8K1J6RO9BW3z",
+    "TwiterCuAccessSecuKey":"QWnRY6a4UcGqszikjdi3olIwizWwyKHpBSCKAjhqsrjvp",
+    "SqlConnetString":"",
+    "sqladdr":"localhost:3306",
+    "sqlid":"root",
+    "sqlpw":"ten101010*",
+    "sqldbname":"db_log",
+    "searchvalue":"텐바이텐"
+  }
+  
