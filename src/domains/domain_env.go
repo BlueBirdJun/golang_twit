@@ -11,9 +11,10 @@ type EnviromentData struct {
 	TwiterCuAccessKey       string `json:"TwiterCuAccessKey"`
 	TwiterCuAccessSecuKey   string `json:"TwiterCuAccessSecuKey"`
 	SqlConnetString         string `json:"SqlConnetString"`
-	Sqladdr					string `json:"sqladdr"`
-	Sqlid					string `json:"sqlid"`
-	Sqlpw					string `json:"sqlpw"`
-	Sqldbname				string `json:"sqldbname"`
-	Searchvalue				string `json:"searchvalue"`
+	Sqladdr                 string `json:"sqladdr"`
+	Sqlid                   string `json:"sqlid"`
+	Sqlpw                   string `json:"sqlpw"`
+	Sqldbname               string `json:"sqldbname"`
+	Searchvalue             string `json:"searchvalue"`
+	ReportTime              int    `json:"ReportTime"`
 }

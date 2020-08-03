@@ -91,9 +91,9 @@ func TwiterAdd(data domains.Twitterlog) {
 		}
 	}
 	if twitidx != 0 {		
-		strquery = fmt.Sprintf("INSERT INTO tbl_twitter (idx,twitkey,twitwriter,twitcontent,twit_regdate,FavoriteCount,RetweetCount,groupkey) VALUE(%d,'%s','%s','%s','%s','%d','%d','%s') ON DUPLICATE KEY UPDATE twitcontent='%s',FavoriteCount='%d',RetweetCount='%d',groupkey='%s'",
-			twitidx, data.Twitkey, data.Twitwriter, data.Twitcontent, data.Twitregdate, data.FavoriteCount, data.RetweetCount, data.GroupKey, data.Twitcontent, data.FavoriteCount, data.RetweetCount, data.GroupKey)
-		fmt.Println(strquery)
+		strquery = fmt.Sprintf("INSERT INTO tbl_twitter (idx,twitkey,twitwriter,twitcontent,twit_regdate,FavoriteCount,RetweetCount,groupkey,ReplyCount) VALUE(%d,'%s','%s','%s','%s','%d','%d','%s',d) ON DUPLICATE KEY UPDATE twitcontent='%s',FavoriteCount='%d',RetweetCount='%d',groupkey='%s',ReplyCount=%d",
+			twitidx, data.Twitkey, data.Twitwriter, data.Twitcontent, data.Twitregdate, data.FavoriteCount, data.RetweetCount, data.GroupKey, data.ReplyCount, data.Twitcontent, data.FavoriteCount, data.RetweetCount, data.GroupKey, data.ReplyCount)
+		//fmt.Println(strquery)
 		result3, err3 := conn.Exec(strquery)
 		//log.Println(err4)
 		if err3 != nil {
@@ -102,8 +102,8 @@ func TwiterAdd(data domains.Twitterlog) {
 		log.Println(result3)
 		log.Println(err3)
 	} else {
-		strquery = fmt.Sprintf("INSERT INTO tbl_twitter (twitkey,twitwriter,twitcontent,twit_regdate,FavoriteCount,RetweetCount,groupkey) VALUE('%s','%s','%s','%s','%d','%d','%s') ",
-			data.Twitkey, data.Twitwriter, data.Twitcontent, data.Twitregdate, data.FavoriteCount, data.RetweetCount, data.GroupKey)
+		strquery = fmt.Sprintf("INSERT INTO tbl_twitter (twitkey,twitwriter,twitcontent,twit_regdate,FavoriteCount,RetweetCount,groupkey,Positve,ReplyCount) VALUE('%s','%s','%s','%s','%d','%d','%s','%s',%d) ",
+			data.Twitkey, data.Twitwriter, data.Twitcontent, data.Twitregdate, data.FavoriteCount, data.RetweetCount, data.GroupKey,data.Positve,data.ReplyCount)
 		fmt.Println(strquery)
 		result, err := conn.Exec(strquery)
 		if err != nil {
@@ -129,7 +129,7 @@ func TwitGet() []domains.Twitterlog {
 
 	formatted := fmt.Sprintf("%d-%02d-%02d", t.Year(), t.Month(), t.Day())
 
-	var squery = "SELECT idx,twitkey,twitwriter,twitcontent, DATE_ADD(twit_regdate, INTERVAL 9 HOUR) twitregdate,favoritecount,retweetcount,regdate,groupkey "
+	var squery = "SELECT idx,twitkey,twitwriter,twitcontent, DATE_ADD(twit_regdate, INTERVAL 9 HOUR) twitregdate,favoritecount,retweetcount,regdate,groupkey,Positve,ReplyCount "
 	squery += "from tbl_twitter "
 	squery += "WHERE date_format(twit_regdate, '%Y-%m-%d') >'" + formatted + "' " //'2020-07-13' "
 	squery += "ORDER BY retweetcount desc,favoritecount DESC,twit_regdate desc"
@@ -143,7 +143,7 @@ func TwitGet() []domains.Twitterlog {
 	for rows.Next() {
 		//idx,twitkey,twitwriter,twitcontent,twit_regdate,favoritecount,retweetcount,regdate,groupkey
 		var s1 = domains.Twitterlog{}
-		err := rows.Scan(&s1.Idx, &s1.Twitkey, &s1.Twitwriter, &s1.Twitcontent, &s1.Twitregdate, &s1.FavoriteCount, &s1.RetweetCount, &s1.Regdate, &s1.GroupKey)
+		err := rows.Scan(&s1.Idx, &s1.Twitkey, &s1.Twitwriter, &s1.Twitcontent, &s1.Twitregdate, &s1.FavoriteCount, &s1.RetweetCount, &s1.Regdate, &s1.GroupKey, &s1.Positve, &s1.ReplyCount)
 		if err != nil {
 			log.Println(err)
 		}

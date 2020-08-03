@@ -13,6 +13,7 @@
     "sqlid":"root",
     "sqlpw":"ten101010*",
     "sqldbname":"db_log",
-    "searchvalue":"텐바이텐"
+    "searchvalue":"텐바이텐",
+    "ReportTime":10
   }
   

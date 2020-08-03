@@ -9,6 +9,7 @@ import (
 	"os"
 	"repositorys"
 	"services"
+	"strconv"
 	"strings"
 	"time"
 
@@ -39,24 +40,10 @@ func main() {
 		services.TwitterIssue()
 		time.Sleep(6 * time.Minute)
 	}
-	/*
-		var jm = domains.JandiData{}
-		jm.Body = "트위터"
-		jm.ConnectColor = "#4CA5EA"
-		jm.ConnectInfo = make([]domains.ConnectInfo, 2)
-		for i := 0; i < 2; i++ {
-			jm.ConnectInfo[i].Title = "제목1"
-			jm.ConnectInfo[i].Description = "내용2"
-		}
-		//jm.ConnectInfo :=[]domains.JandiData.ConnectInfo
-		//[3]domains.JandiData.ConnectInfo{}
-		//Helpers.JandiRecv(jm)
-		repositorys.TwitGet()
-	*/
-
 }
 
 func TwitDataCall() {
+
 	var twitkey = globals.Globalenv.TwiterCustomerKey
 	var twitsecretkey = globals.Globalenv.TwiterCustomerSecretKey
 	var acesskey = globals.Globalenv.TwiterCuAccessKey
@@ -78,7 +65,7 @@ func TwitDataCall() {
 	httpClient := config.Client(oauth1.NoContext, token)
 	// Twitter Client
 	client := twitter.NewClient(httpClient)
-	fmt.Println("Starting Stream...")
+	//fmt.Println("Starting Stream...")
 	search, resp, err := client.Search.Tweets(&twitter.SearchTweetParams{
 		Query:      globals.Globalenv.Searchvalue,
 		Count:      20,
@@ -87,7 +74,8 @@ func TwitDataCall() {
 	if err != nil {
 		log.Print(err)
 	}
-	log.Printf("%+v\n", resp)
+	fmt.Printf("%+v\n", resp)
+
 	var collectime = time.Now().Format("20060102150405")
 	for i := range search.Statuses {
 		twitdata := domains.Twitterlog{}
@@ -100,8 +88,12 @@ func TwitDataCall() {
 		twitdata.RetweetCount = search.Statuses[i].RetweetCount
 		twitdata.FavoriteCount = search.Statuses[i].FavoriteCount
 		twitdata.Twitregdate = cleandate
+		twitdata.Positve = strconv.FormatBool(search.Statuses[i].PossiblySensitive)
+		twitdata.ReplyCount = search.Statuses[i].ReplyCount
 		repositorys.TwiterAdd(twitdata)
 	}
+	fmt.Print("\033[2J")            //Clear screen
+	fmt.Printf("\033[%d;%dH", 0, 0) // Set cursor posit
 	fmt.Println("완료")
 }
 

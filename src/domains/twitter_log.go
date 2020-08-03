@@ -12,4 +12,6 @@ type Twitterlog struct {
 	FollowersCount int
 	FriendsCount   int
 	GroupKey       string
+	Positve        string
+	ReplyCount     int
 }
