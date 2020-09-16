@@ -234,8 +234,9 @@ func SnsCollectSend() {
 			globals.GlobalSnsData[lstsns[i].Idx] = lstsns[i]
 			var c1 = domains.ConnectInfo{}
 			c1.Title = ConvertSns(lstsns[i].ChanelName) + " Like:" + strconv.Itoa(lstsns[i].LikeCount) + " friend:" + strconv.Itoa(lstsns[i].FriendCount)
-			c1.Description = lstsns[i].Memo + "\r\n" + lstsns[i].WriteDate
-			c1.ImageURL = lstsns[i].Url
+			c1.Description = lstsns[i].Memo + "\r\n" + lstsns[i].WriteDate + "\n" + lstsns[i].Url
+			//c1.ImageURL = lstsns[i].Url
+
 			jandiconnect[idx] = c1
 			idx++
 		}
