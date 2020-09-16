@@ -10,12 +10,14 @@ import (
 
 var Globalenv domains.EnviromentData
 
+var GlobalSnsData map[int]domains.SometrendSnsData
 
 var GlobalTwitData map[string]domains.TwitInfo
 
 func ReadConfg(Enviromet string) domains.ResultModel {
 
 	GlobalTwitData = make(map[string]domains.TwitInfo)
+	GlobalSnsData = make(map[int]domains.SometrendSnsData)
 
 	var filename = fmt.Sprintf("config.%s.json", Enviromet)
 	rtmodel := domains.ResultModel{}

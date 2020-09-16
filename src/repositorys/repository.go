@@ -90,7 +90,7 @@ func TwiterAdd(data domains.Twitterlog) {
 			log.Println(err)
 		}
 	}
-	if twitidx != 0 {		
+	if twitidx != 0 {
 		strquery = fmt.Sprintf("INSERT INTO tbl_twitter (idx,twitkey,twitwriter,twitcontent,twit_regdate,FavoriteCount,RetweetCount,groupkey,ReplyCount) VALUE(%d,'%s','%s','%s','%s','%d','%d','%s',d) ON DUPLICATE KEY UPDATE twitcontent='%s',FavoriteCount='%d',RetweetCount='%d',groupkey='%s',ReplyCount=%d",
 			twitidx, data.Twitkey, data.Twitwriter, data.Twitcontent, data.Twitregdate, data.FavoriteCount, data.RetweetCount, data.GroupKey, data.ReplyCount, data.Twitcontent, data.FavoriteCount, data.RetweetCount, data.GroupKey, data.ReplyCount)
 		//fmt.Println(strquery)
@@ -103,7 +103,7 @@ func TwiterAdd(data domains.Twitterlog) {
 		log.Println(err3)
 	} else {
 		strquery = fmt.Sprintf("INSERT INTO tbl_twitter (twitkey,twitwriter,twitcontent,twit_regdate,FavoriteCount,RetweetCount,groupkey,Positve,ReplyCount) VALUE('%s','%s','%s','%s','%d','%d','%s','%s',%d) ",
-			data.Twitkey, data.Twitwriter, data.Twitcontent, data.Twitregdate, data.FavoriteCount, data.RetweetCount, data.GroupKey,data.Positve,data.ReplyCount)
+			data.Twitkey, data.Twitwriter, data.Twitcontent, data.Twitregdate, data.FavoriteCount, data.RetweetCount, data.GroupKey, data.Positve, data.ReplyCount)
 		fmt.Println(strquery)
 		result, err := conn.Exec(strquery)
 		if err != nil {
@@ -125,7 +125,7 @@ func TwitGet() []domains.Twitterlog {
 	if err != nil {
 		log.Println(err)
 	}
-	t := time.Now().AddDate(0,0,-2)
+	t := time.Now().AddDate(0, 0, -2)
 
 	formatted := fmt.Sprintf("%d-%02d-%02d", t.Year(), t.Month(), t.Day())
 
@@ -155,3 +155,150 @@ func TwitGet() []domains.Twitterlog {
 	//var rtdata = data[0:idx]
 	return data[0:idx]
 }
+
+func SnsLogAdd(data domains.SometrendSnsData) {
+	var db = GetDbinfo()
+	dataSource := db.user + ":" + db.pwd + "@tcp(" + db.url + ")/" + db.database
+	conn, err := sql.Open(db.engine, dataSource)
+	if err != nil {
+		log.Println(err)
+	}
+	var strquery string
+	strquery = fmt.Sprintf("SELECT IDX FROM  sometrendsnsdata where SEQUENCE= '%s'", data.Sequence)
+	rows1, err1 := conn.Query(strquery)
+
+	defer conn.Close()
+
+	var twitidx string
+	if err1 != nil {
+		log.Println(err1)
+	}
+
+	for rows1.Next() {
+		err := rows1.Scan(&twitidx)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	if twitidx == "" {
+		strquery = fmt.Sprintf("INSERT INTO sometrendsnsdata ( Sequence,StatidDate,ChanelName,Url,Memo,WriterName,WriteDate,LikeCount,FriendCount,CommentCount,TagData) VALUE('%s','%s','%s','%s','%s','%s','%s',%d,%d,%d,'%s')",
+			data.Sequence, data.StatidDate, data.ChanelName, data.Url, data.Memo, data.WriterName, data.WriteDate, data.LikeCount, data.FriendCount, data.CommentCount, data.TagData)
+		//fmt.Println(strquery)
+		result3, err3 := conn.Exec(strquery)
+		//log.Println(err4)
+		if err3 != nil {
+			log.Println(data.WriterName)
+			log.Println(err)
+		}
+		log.Println(result3)
+		log.Println(err3)
+	}
+}
+
+func SnsMentionAdd(data domains.SomeTrendMentionData) {
+	var db = GetDbinfo()
+	dataSource := db.user + ":" + db.pwd + "@tcp(" + db.url + ")/" + db.database
+	conn, err := sql.Open(db.engine, dataSource)
+	if err != nil {
+		log.Println(err)
+	}
+
+	var strquery string
+	strquery = fmt.Sprintf("DELETE FROM sometrendmentiondata  WHERE SEQUENCE ='%S'", data.Sequence)
+	rows1, err1 := conn.Exec(strquery)
+	defer conn.Close()
+	log.Println(rows1)
+	if err1 != nil {
+		log.Println(err1)
+	}
+	strquery = fmt.Sprintf("INSERT INTO sometrendmentiondata (SEQUENCE,StatidDate,ChanelName,FrequencyRate) VALUES('%s','%s','%s',%d)",
+		data.Sequence, data.StatidDate, data.ChanelName, data.FrequencyRate)
+
+	result3, err3 := conn.Exec(strquery)
+
+	if err3 != nil {
+		log.Println(err)
+	}
+	log.Println(result3)
+	log.Println(err3) 
+}
+
+func SnsMentionDelete(data string) {
+	var db = GetDbinfo()
+	dataSource := db.user + ":" + db.pwd + "@tcp(" + db.url + ")/" + db.database
+	conn, err := sql.Open(db.engine, dataSource)
+	if err != nil {
+		log.Println(err)
+	}
+
+	var strquery string
+	strquery = fmt.Sprintf("DELETE FROM sometrendmentiondata  WHERE chanelname ='%s'", data)
+	rows1, err1 := conn.Exec(strquery)
+	defer conn.Close()
+	log.Println(rows1)
+	if err1 != nil {
+		log.Println(err1)
+	}
+	 
+}
+
+func GetMention(strdate string) []domains.SomeTrendMentionData {
+	var db = GetDbinfo()
+	dataSource := db.user + ":" + db.pwd + "@tcp(" + db.url + ")/" + db.database
+	conn, err := sql.Open(db.engine, dataSource)
+	if err != nil {
+		log.Println(err)
+	}
+	var strquery string
+	var idx int
+	strquery = fmt.Sprintf("SELECT  statiddate,frequencyrate FROM sometrendmentiondata WHERE chanelname ='%s' ORDER BY statiddate desc LIMIT 7", strdate)
+	rows, err1 := conn.Query(strquery)
+	if err1 != nil {
+		log.Println(err1)
+	}
+	var data = make([]domains.SomeTrendMentionData, 7)
+	defer conn.Close()
+	for rows.Next() {
+		var s1 = domains.SomeTrendMentionData{}
+		err := rows.Scan(&s1.StatidDate, &s1.FrequencyRate)
+		if err != nil {
+			log.Println(err)
+		}
+		//data = append(data, 1)
+		data[idx] = s1
+		idx++
+	}
+	return data[0:idx]
+}
+
+
+
+func GetSns(strdate string) []domains.SometrendSnsData {
+	var db = GetDbinfo()
+	dataSource := db.user + ":" + db.pwd + "@tcp(" + db.url + ")/" + db.database
+	conn, err := sql.Open(db.engine, dataSource)
+	if err != nil {
+		log.Println(err)
+	}
+	var strquery string
+	var idx int
+	strquery = fmt.Sprintf("SELECT  idx,Sequence,chanelname,url,memo,WriterName,writedate,LIKEcount,friendcount,commentcount,tagdata FROM sometrendsnsdata  WHERE WriteDate >'%s'", strdate)
+	rows, err1 := conn.Query(strquery)
+	if err1 != nil {
+		log.Println(err1)
+	}
+	var data = make([]domains.SometrendSnsData, 200)
+	defer conn.Close()
+	for rows.Next() {
+		var s1 = domains.SometrendSnsData{}
+		err := rows.Scan(&s1.Idx, &s1.Sequence,&s1.ChanelName, &s1.Url, &s1.Memo, &s1.WriterName, &s1.WriteDate, &s1.LikeCount, &s1.FriendCount, &s1.CommentCount, &s1.TagData)
+		if err != nil {
+			log.Println(err)
+		}
+		//data = append(data, 1)
+		data[idx] = s1
+		idx++
+	}
+	return data[0:idx]
+}
+

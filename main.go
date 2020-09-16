@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Helpers"
 	"domains"
 	"flag"
 	"fmt"
@@ -10,7 +11,6 @@ import (
 	"repositorys"
 	"services"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/coreos/pkg/flagutil"
@@ -33,13 +33,26 @@ func main() {
 	fmt.Println(globals.Globalenv.Title)
 	fmt.Println("Enviroment Read Complete")
 	for {
-		fmt.Println("수집")
-		TwitDataCall()
+		services.SomeTrendCollect()
+		services.SnsCollectSend()
+		services.SomeTrendMethionCollect()
+		services.SomeTrendEmotionCollect()
+		time.Sleep(10 * time.Minute)
 
-		fmt.Println("트윗보내기")
-		services.TwitterIssue()
-		time.Sleep(6 * time.Minute)
 	}
+	//services.SomeTrendMethionCollect()
+	//services.SomeTrendEmotionCollect()
+
+	fmt.Println("On Complete")
+	/*
+		for {
+			fmt.Println("수집")
+			TwitDataCall()
+
+			fmt.Println("트윗보내기")
+			services.TwitterIssue()
+			time.Sleep(10 * time.Minute)
+		}*/
 }
 
 func TwitDataCall() {
@@ -82,7 +95,7 @@ func TwitDataCall() {
 		twitdata.Twitkey = search.Statuses[i].IDStr
 		twitdata.Twitwriter = search.Statuses[i].User.ScreenName
 		twitdata.Twitcontent = search.Statuses[i].Text
-		var cleandate = CleanDate(search.Statuses[i].CreatedAt)
+		var cleandate = Helpers.CleanDate(search.Statuses[i].CreatedAt)
 
 		twitdata.GroupKey = collectime
 		twitdata.RetweetCount = search.Statuses[i].RetweetCount
@@ -95,41 +108,4 @@ func TwitDataCall() {
 	fmt.Print("\033[2J")            //Clear screen
 	fmt.Printf("\033[%d;%dH", 0, 0) // Set cursor posit
 	fmt.Println("완료")
-}
-
-func CleanDate(CreatedAt string) string {
-	month := strings.Split(CreatedAt, " ")[1]
-	day := strings.Split(CreatedAt, " ")[2]
-	year := strings.Split(CreatedAt, " ")[5]
-	hour := strings.Split(CreatedAt, " ")[3]
-
-	if month == "Jan" {
-		month = "01"
-	} else if month == "Feb" {
-		month = "02"
-	} else if month == "Mar" {
-		month = "03"
-	} else if month == "Apr" {
-		month = "04"
-	} else if month == "May" {
-		month = "05"
-	} else if month == "Jun" {
-		month = "06"
-	} else if month == "Jul" {
-		month = "07"
-	} else if month == "Aug" {
-		month = "08"
-	} else if month == "Sep" {
-		month = "09"
-	} else if month == "Oct" {
-		month = "10"
-	} else if month == "Nov" {
-		month = "11"
-	} else if month == "Dec" {
-		month = "12"
-	}
-
-	full_date := year + "-" + month + "-" + day + " " + hour
-
-	return full_date
 }

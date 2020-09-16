@@ -1,7 +1,6 @@
 package services
 
 import (
-	"Helpers"
 	"domains"
 	"fmt"
 	"globals"
@@ -20,7 +19,7 @@ func TwitterIssue() int {
 	if int(t.Weekday()) == 7 { //일요일이면 리턴
 		return 0
 	}
-	if int(t.Weekday()) == 8 { //일요일이면 리턴
+	if int(t.Weekday()) == 0 { //일요일이면 리턴
 		return 0
 	}
 
@@ -80,12 +79,11 @@ func TwitterIssue() int {
 			idx++
 		}
 		fmt.Println(val)
-
 	}
 
 	if idx > 0 {
 		jm.ConnectInfo = jandiconnect[0:idx]
-		Helpers.JandiRecv(jm)
+		//Helpers.JandiRecv(jm)
 		fmt.Println("잔디발행")
 	}
 	fmt.Println("생성")

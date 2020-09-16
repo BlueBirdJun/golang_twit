@@ -11,7 +11,7 @@
     "SqlConnetString":"",
     "sqladdr":"localhost:3306",
     "sqlid":"root",
-    "sqlpw":"ten101010*",
+    "sqlpw":"admin",
     "sqldbname":"db_log",
     "searchvalue":"텐바이텐",
     "ReportTime":10
