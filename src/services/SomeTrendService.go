@@ -16,6 +16,7 @@ import (
 )
 
 func SomeTrendCollect() int {
+	fmt.Println(time.Now().Format("2006-01-02 13:00 SomeTrendCollect"))
 	endday := time.Now().Format("20060102")
 	startday := time.Now().AddDate(0, 0, -1).Format("20060102")
 	//startday := time.Now().Format("20060102")
@@ -61,6 +62,24 @@ func SomeTrendCollect() int {
 }
 
 func SomeTrendMethionCollect() int {
+
+	fmt.Println(time.Now().Format("2006-01-02 13:00 SomeTrendMethionCollect"))
+
+	t := time.Now()
+	if int(t.Weekday()) == 6 { //토요일이면 리턴
+		return 1
+	}
+	if int(t.Weekday()) == 7 { //일요일이면 리턴
+		return 1
+	}
+	if int(t.Weekday()) == 0 { //일요일이면 리턴
+		return 1
+	}
+
+	if t.Hour() != 9 { //맵초기화
+		return 1
+	}
+
 	endday := time.Now().AddDate(0, 0, -1).Format("20060102")
 	startday := time.Now().AddDate(0, 0, -7).Format("20060102")
 	snsmethion := "https://some.co.kr/sometrend/analysis/trend/transition?sources=13&categories=2046&endDate=" + endday + "&startDate=" + startday + "&keyword=%ED%85%90%EB%B0%94%EC%9D%B4%ED%85%90&period=0"
@@ -111,6 +130,22 @@ func SomeTrendRelationCollect() int {
 
 //감성어
 func SomeTrendEmotionCollect() int {
+	fmt.Println(time.Now().Format("2006-01-02 13:00 SomeTrendEmotionCollect"))
+	t := time.Now()
+	if int(t.Weekday()) == 6 { //토요일이면 리턴
+		return 1
+	}
+	if int(t.Weekday()) == 7 { //일요일이면 리턴
+		return 1
+	}
+	if int(t.Weekday()) == 0 { //일요일이면 리턴
+		return 1
+	}
+
+	if t.Hour() != 9 { //맵초기화
+		return 1
+	}
+
 	endday := time.Now().Format("20060102")
 	startday := time.Now().AddDate(0, 0, -3).Format("20060102")
 	snsmethion := "https://some.co.kr/sometrend/analysis/trend/sentiment-transition?sources=15&categories=2046&endDate=" + endday + "&startDate=" + startday + "&keyword=%ED%85%90%EB%B0%94%EC%9D%B4%ED%85%90&period=1"
@@ -167,25 +202,16 @@ func SomeTrendEmotionCollect() int {
 	//jandiconnect[0] = c1
 	jm.ConnectInfo[0] = c1 //jandiconnect[0]
 
-	t := time.Now()
-	if int(t.Weekday()) == 6 { //토요일이면 리턴
-		return 1
+	if t.Hour() != 9 && t.Minute() < globals.Globalenv.ReportTime { //맵초기화
+		Helpers.JandiRecv(jm)
 	}
-	if int(t.Weekday()) == 7 { //일요일이면 리턴
-		return 1
-	}
-	if int(t.Weekday()) == 0 { //일요일이면 리턴
-		return 1
-	}
-	//if t.Hour() == 9 && t.Minute() < globals.Globalenv.ReportTime { //맵초기화
-	Helpers.JandiRecv(jm)
-	//}
 
 	//fmt.Println(strComment)
 	return 1
 }
 
 func SnsCollectSend() {
+	fmt.Println(time.Now().Format("2006-01-02 13:00 SnsCollectSend"))
 	t := time.Now()
 	fmt.Printf("%s 요일  %d : %d \n", t.Weekday(), t.Hour(), t.Minute())
 	if int(t.Weekday()) == 6 { //토요일이면 리턴
