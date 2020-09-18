@@ -33,17 +33,19 @@ func main() {
 	fmt.Println(globals.Globalenv.Title)
 	fmt.Println("Enviroment Read Complete")
 	for {
-		services.SomeTrendCollect()
-		services.SnsCollectSend()
+		//services.SomeTrendCollect()
+		//services.SnsCollectSend()
 		services.SomeTrendMethionCollect()
 		services.SomeTrendEmotionCollect()
+		//TwitDataCall()
+		//services.TwitterIssue()
 		time.Sleep(10 * time.Minute)
 
 	}
 	//services.SomeTrendMethionCollect()
 	//services.SomeTrendEmotionCollect()
 
-	fmt.Println("On Complete")
+	//fmt.Println("On Complete")
 	/*
 		for {
 			fmt.Println("수집")

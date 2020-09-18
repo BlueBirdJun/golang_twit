@@ -16,7 +16,7 @@ import (
 )
 
 func SomeTrendCollect() int {
-	fmt.Println(time.Now().Format("2006-01-02 13:00 SomeTrendCollect"))
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05") + "SomeTrendCollect")
 	endday := time.Now().Format("20060102")
 	startday := time.Now().AddDate(0, 0, -1).Format("20060102")
 	//startday := time.Now().Format("20060102")
@@ -62,8 +62,7 @@ func SomeTrendCollect() int {
 }
 
 func SomeTrendMethionCollect() int {
-
-	fmt.Println(time.Now().Format("2006-01-02 13:00 SomeTrendMethionCollect"))
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05") + "SomeTrendMethionCollect")
 
 	t := time.Now()
 	if int(t.Weekday()) == 6 { //토요일이면 리턴
@@ -130,7 +129,8 @@ func SomeTrendRelationCollect() int {
 
 //감성어
 func SomeTrendEmotionCollect() int {
-	fmt.Println(time.Now().Format("2006-01-02 13:00 SomeTrendEmotionCollect"))
+	fmt.Println(time.Now().Format("2006-01-02 13:00") + "SomeTrendEmotionCollect")
+
 	t := time.Now()
 	if int(t.Weekday()) == 6 { //토요일이면 리턴
 		return 1
@@ -211,7 +211,8 @@ func SomeTrendEmotionCollect() int {
 }
 
 func SnsCollectSend() {
-	fmt.Println(time.Now().Format("2006-01-02 13:00 SnsCollectSend"))
+	fmt.Println(time.Now().Format("2006-01-02 13:00") + "SnsCollectSend")
+
 	t := time.Now()
 	fmt.Printf("%s 요일  %d : %d \n", t.Weekday(), t.Hour(), t.Minute())
 	if int(t.Weekday()) == 6 { //토요일이면 리턴
@@ -250,31 +251,31 @@ func SnsCollectSend() {
 		//lstsns[i].Memo
 		uDec, _ := b64.URLEncoding.DecodeString(lstsns[i].Memo)
 		//fmt.Println(string(uDec))
-		lstsns[i].Memo = string(uDec)
+		lstsns[i].Memo = strings.Trim(string(uDec), " ")
 		uDec1, _ := b64.URLEncoding.DecodeString(lstsns[i].WriterName)
 		//fmt.Println(string(uDec))
 		lstsns[i].WriterName = string(uDec1)
+		if len(lstsns[i].Memo) > 1 {
+			val, exists := globals.GlobalSnsData[lstsns[i].Idx]
+			if !exists {
+				globals.GlobalSnsData[lstsns[i].Idx] = lstsns[i]
+				var c1 = domains.ConnectInfo{}
+				c1.Title = ConvertSns(lstsns[i].ChanelName) + " Like:" + strconv.Itoa(lstsns[i].LikeCount) + " friend:" + strconv.Itoa(lstsns[i].FriendCount)
+				c1.Description = lstsns[i].Memo + "\r\n" + lstsns[i].WriteDate + "\n" + lstsns[i].Url
+				//c1.ImageURL = lstsns[i].Url
 
-		val, exists := globals.GlobalSnsData[lstsns[i].Idx]
-		if !exists {
-			globals.GlobalSnsData[lstsns[i].Idx] = lstsns[i]
-			var c1 = domains.ConnectInfo{}
-			c1.Title = ConvertSns(lstsns[i].ChanelName) + " Like:" + strconv.Itoa(lstsns[i].LikeCount) + " friend:" + strconv.Itoa(lstsns[i].FriendCount)
-			c1.Description = lstsns[i].Memo + "\r\n" + lstsns[i].WriteDate + "\n" + lstsns[i].Url
-			//c1.ImageURL = lstsns[i].Url
-
-			jandiconnect[idx] = c1
-			idx++
+				jandiconnect[idx] = c1
+				idx++
+			}
+			fmt.Println(val)
 		}
-		fmt.Println(val)
 	}
 	if idx > 0 {
 		jm.ConnectInfo = jandiconnect[0:idx]
 		Helpers.JandiRecv(jm)
 		fmt.Println("잔디발행")
 	}
-
-	fmt.Println(globals.GlobalSnsData)
+	//fmt.Println(globals.GlobalSnsData)
 }
 
 func ConvertSns(kind string) string {

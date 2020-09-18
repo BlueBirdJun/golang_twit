@@ -220,7 +220,7 @@ func SnsMentionAdd(data domains.SomeTrendMentionData) {
 		log.Println(err)
 	}
 	log.Println(result3)
-	log.Println(err3) 
+	log.Println(err3)
 }
 
 func SnsMentionDelete(data string) {
@@ -232,14 +232,14 @@ func SnsMentionDelete(data string) {
 	}
 
 	var strquery string
-	strquery = fmt.Sprintf("DELETE FROM sometrendmentiondata  WHERE chanelname ='%s'", data)
+	strquery = fmt.Sprintf("DELETE FROM sometrendmentiondata  WHERE chanelname ='%s'  ", data)
 	rows1, err1 := conn.Exec(strquery)
 	defer conn.Close()
 	log.Println(rows1)
 	if err1 != nil {
 		log.Println(err1)
 	}
-	 
+
 }
 
 func GetMention(strdate string) []domains.SomeTrendMentionData {
@@ -271,8 +271,6 @@ func GetMention(strdate string) []domains.SomeTrendMentionData {
 	return data[0:idx]
 }
 
-
-
 func GetSns(strdate string) []domains.SometrendSnsData {
 	var db = GetDbinfo()
 	dataSource := db.user + ":" + db.pwd + "@tcp(" + db.url + ")/" + db.database
@@ -282,7 +280,7 @@ func GetSns(strdate string) []domains.SometrendSnsData {
 	}
 	var strquery string
 	var idx int
-	strquery = fmt.Sprintf("SELECT  idx,Sequence,chanelname,url,memo,WriterName,writedate,LIKEcount,friendcount,commentcount,tagdata FROM sometrendsnsdata  WHERE WriteDate >'%s'", strdate)
+	strquery = fmt.Sprintf("SELECT  idx,Sequence,chanelname,url,memo,WriterName,writedate,LIKEcount,friendcount,commentcount,tagdata FROM sometrendsnsdata  WHERE WriteDate >'%s' AND chanelname <>'ko.twitter' ", strdate)
 	rows, err1 := conn.Query(strquery)
 	if err1 != nil {
 		log.Println(err1)
@@ -291,7 +289,7 @@ func GetSns(strdate string) []domains.SometrendSnsData {
 	defer conn.Close()
 	for rows.Next() {
 		var s1 = domains.SometrendSnsData{}
-		err := rows.Scan(&s1.Idx, &s1.Sequence,&s1.ChanelName, &s1.Url, &s1.Memo, &s1.WriterName, &s1.WriteDate, &s1.LikeCount, &s1.FriendCount, &s1.CommentCount, &s1.TagData)
+		err := rows.Scan(&s1.Idx, &s1.Sequence, &s1.ChanelName, &s1.Url, &s1.Memo, &s1.WriterName, &s1.WriteDate, &s1.LikeCount, &s1.FriendCount, &s1.CommentCount, &s1.TagData)
 		if err != nil {
 			log.Println(err)
 		}
@@ -301,4 +299,3 @@ func GetSns(strdate string) []domains.SometrendSnsData {
 	}
 	return data[0:idx]
 }
-

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"Helpers"
 	"domains"
 	"fmt"
 	"globals"
@@ -83,10 +84,10 @@ func TwitterIssue() int {
 
 	if idx > 0 {
 		jm.ConnectInfo = jandiconnect[0:idx]
-		//Helpers.JandiRecv(jm)
+		Helpers.JandiRecv(jm)
 		fmt.Println("잔디발행")
 	}
-	fmt.Println("생성")
+	//fmt.Println("생성")
 	return 1
 	//잔디에다던지기
 	//Helpers.JandiRecv(jm)
