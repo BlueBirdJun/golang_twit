@@ -3,6 +3,7 @@ package main
 import (
 	"Helpers"
 	"domains"
+	b64 "encoding/base64"
 	"flag"
 	"fmt"
 	"globals"
@@ -33,12 +34,12 @@ func main() {
 	fmt.Println(globals.Globalenv.Title)
 	fmt.Println("Enviroment Read Complete")
 	for {
-		//services.SomeTrendCollect()
-		//services.SnsCollectSend()
+		services.SomeTrendCollect()
+		services.SnsCollectSend()
 		services.SomeTrendMethionCollect()
 		services.SomeTrendEmotionCollect()
-		//TwitDataCall()
-		//services.TwitterIssue()
+		TwitDataCall()
+		services.TwitterIssue()
 		time.Sleep(10 * time.Minute)
 
 	}
@@ -95,8 +96,10 @@ func TwitDataCall() {
 	for i := range search.Statuses {
 		twitdata := domains.Twitterlog{}
 		twitdata.Twitkey = search.Statuses[i].IDStr
-		twitdata.Twitwriter = search.Statuses[i].User.ScreenName
-		twitdata.Twitcontent = search.Statuses[i].Text
+		//twitdata.Twitwriter = search.Statuses[i].User.ScreenName
+		twitdata.Twitwriter = b64.StdEncoding.EncodeToString([]byte(search.Statuses[i].User.ScreenName))
+		//twitdata.Twitcontent = search.Statuses[i].Text
+		twitdata.Twitcontent = b64.StdEncoding.EncodeToString([]byte(search.Statuses[i].Text))
 		var cleandate = Helpers.CleanDate(search.Statuses[i].CreatedAt)
 
 		twitdata.GroupKey = collectime

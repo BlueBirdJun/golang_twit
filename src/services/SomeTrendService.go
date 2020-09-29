@@ -142,10 +142,6 @@ func SomeTrendEmotionCollect() int {
 		return 1
 	}
 
-	if t.Hour() != 9 { //맵초기화
-		return 1
-	}
-
 	endday := time.Now().Format("20060102")
 	startday := time.Now().AddDate(0, 0, -3).Format("20060102")
 	snsmethion := "https://some.co.kr/sometrend/analysis/trend/sentiment-transition?sources=15&categories=2046&endDate=" + endday + "&startDate=" + startday + "&keyword=%ED%85%90%EB%B0%94%EC%9D%B4%ED%85%90&period=1"
@@ -202,9 +198,9 @@ func SomeTrendEmotionCollect() int {
 	//jandiconnect[0] = c1
 	jm.ConnectInfo[0] = c1 //jandiconnect[0]
 
-	if t.Hour() != 9 && t.Minute() < globals.Globalenv.ReportTime { //맵초기화
-		Helpers.JandiRecv(jm)
-	}
+	//if t.Hour() != 9 && t.Minute() < globals.Globalenv.ReportTime { //맵초기화
+	Helpers.JandiRecv2(jm)
+	//}
 
 	//fmt.Println(strComment)
 	return 1
