@@ -9,8 +9,7 @@ import (
 )
 
 func JandiRecv(m domains.JandiData) {
-	//url := "https://wh.jandi.com/connect-api/webhook/15400820/cf5a6e8c660b5ed607ab85c68c7a4f81"
-	url := "https://wh.jandi.com/connect-api/webhook/15400820/7fcf97debc911b6d39982c32e245e94c"
+	 
 	
 	jsonStr, err := json.Marshal(m)
 	if err != nil {
@@ -35,8 +34,7 @@ func JandiRecv(m domains.JandiData) {
 }
 
 func JandiRecv2(m domains.JandiData) {
-	//url := "https://wh.jandi.com/connect-api/webhook/15400820/cf5a6e8c660b5ed607ab85c68c7a4f81"
-	url := "https://wh.jandi.com/connect-api/webhook/15400820/cf5a6e8c660b5ed607ab85c68c7a4f81"
+	 
 	
 	jsonStr, err := json.Marshal(m)
 	if err != nil {
